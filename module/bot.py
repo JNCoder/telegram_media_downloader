@@ -36,7 +36,7 @@ from module.pyrogram_extension import (
     set_meta_data,
     upload_telegram_chat_message,
 )
-from utils.format import replace_date_time, validate_title
+from utils.format import replace_date_time, validate_title, remove_donat_person, remove_emoji
 from utils.meta_data import MetaData
 from utils.updates import get_latest_release
 
@@ -926,11 +926,13 @@ async def forward_normal_content(
     if node.download_filter:
         meta_data = MetaData()
         caption = message.caption
+        if caption: caption = remove_donat_person(remove_emoji(caption))
         if caption:
             caption = validate_title(caption)
             _bot.app.set_caption_name(node.chat_id, message.media_group_id, caption)
         else:
             caption = _bot.app.get_caption_name(node.chat_id, message.media_group_id)
+        message.caption = caption
         set_meta_data(meta_data, message, caption)
         _bot.filter.set_meta_data(meta_data)
         if not _bot.filter.exec(node.download_filter):
