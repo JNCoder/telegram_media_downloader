@@ -286,3 +286,21 @@ def create_progress_bar(progress, total_bars=10):
     remaining_bars = total_bars - completed_bars
     progress_bar = "█" * completed_bars + "░" * remaining_bars
     return progress_bar
+
+def remove_donat_person(message) -> str:
+    if message:
+        start_index = message.find("@")
+        if start_index > 0: return message[0:start_index]
+    return message
+
+def remove_emoji(message):
+    if message:
+        emoji_pattern = re.compile(
+        u"(\ud83d[\ude00-\ude4f])|"  # emoticons
+        u"(\ud83c[\udf00-\uffff])|"  # symbols & pictographs (1 of 2)
+        u"(\ud83d[\u0000-\uddff])|"  # symbols & pictographs (2 of 2)
+        u"(\ud83d[\ude80-\udeff])|"  # transport & map symbols
+        u"(\ud83c[\udde0-\uddff])"  # flags (iOS)
+        "+", flags=re.UNICODE)
+        return emoji_pattern.sub(r'', message)
+    return message
